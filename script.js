@@ -61,20 +61,40 @@ class KickstarterTable {
     const endIndex = startIndex + this.rowsPerPage;
     const currentProjects = this.projects.slice(startIndex, endIndex);
 
-    console.log("Current page projects:", currentProjects);
-
     if (currentProjects.length === 0) {
       this.tableBody.innerHTML = `
             <tr>
-                <td colspan="3">No projects to display</td>
+                <td colspan="3">
+                    <div class="table-body-empty">
+                        No projects to display
+                    </div>
+                </td>
             </tr>
         `;
       return;
     }
 
-    this.tableBody.innerHTML = currentProjects
-      .map(
-        (project, index) => `
+    // Fill remaining rows with empty rows if needed
+    const emptyRowsCount = this.rowsPerPage - currentProjects.length;
+    const emptyRows =
+      emptyRowsCount > 0
+        ? Array(emptyRowsCount)
+            .fill(
+              `
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        `
+            )
+            .join("")
+        : "";
+
+    this.tableBody.innerHTML =
+      currentProjects
+        .map(
+          (project, index) => `
                 <tr>
                     <td>${startIndex + index + 1}</td>
                     <td>${Math.round(project.percentageFunded)}%</td>
@@ -83,8 +103,8 @@ class KickstarterTable {
                     ).toLocaleString()}</td>
                 </tr>
             `
-      )
-      .join("");
+        )
+        .join("") + emptyRows;
   }
 
   setupPagination() {
