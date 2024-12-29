@@ -89,46 +89,71 @@ class KickstarterTable {
 
   setupPagination() {
     const pageCount = Math.ceil(this.projects.length / this.rowsPerPage);
-    this.paginationContainer.innerHTML = "";
+    this.paginationContainer.innerHTML = `
+        <div class="table-footer">
+            <div class="rows-per-page">
+                <span>Rows per page: ${this.rowsPerPage}</span>
+            </div>
+            <div class="pagination-controls">
+                <button class="page-nav" ${
+                  this.currentPage === 1 ? "disabled" : ""
+                }>
+                    ←
+                </button>
+                <div class="page-info">
+                    <input type="number" class="page-input" value="${
+                      this.currentPage
+                    }" min="1" max="${pageCount}">
+                    <span>of ${pageCount}</span>
+                </div>
+                <button class="page-nav" ${
+                  this.currentPage === pageCount ? "disabled" : ""
+                }>
+                    →
+                </button>
+            </div>
+        </div>
+    `;
 
-    // Previous button
-    if (pageCount > 1) {
-      this.addPaginationButton(
-        "Previous",
-        this.currentPage > 1 ? this.currentPage - 1 : null
-      );
-    }
+    // Add event listeners
+    const prevButton = this.paginationContainer.querySelector(
+      ".page-nav:first-child"
+    );
+    const nextButton = this.paginationContainer.querySelector(
+      ".page-nav:last-child"
+    );
+    const pageInput = this.paginationContainer.querySelector(".page-input");
 
-    // Page numbers
-    for (let i = 1; i <= pageCount; i++) {
-      this.addPaginationButton(i, i);
-    }
-
-    // Next button
-    if (pageCount > 1) {
-      this.addPaginationButton(
-        "Next",
-        this.currentPage < pageCount ? this.currentPage + 1 : null
-      );
-    }
-  }
-
-  addPaginationButton(text, pageNumber) {
-    const button = document.createElement("button");
-    button.innerText = text;
-
-    if (pageNumber === null) {
-      button.disabled = true;
-    } else {
-      button.classList.toggle("active", pageNumber === this.currentPage);
-      button.addEventListener("click", () => {
-        this.currentPage = pageNumber;
+    prevButton.addEventListener("click", () => {
+      if (this.currentPage > 1) {
+        this.currentPage--;
         this.renderTable();
         this.setupPagination();
-      });
-    }
+      }
+    });
 
-    this.paginationContainer.appendChild(button);
+    nextButton.addEventListener("click", () => {
+      if (this.currentPage < pageCount) {
+        this.currentPage++;
+        this.renderTable();
+        this.setupPagination();
+      }
+    });
+
+    pageInput.addEventListener("change", (e) => {
+      const newPage = parseInt(e.target.value);
+      if (newPage >= 1 && newPage <= pageCount) {
+        this.currentPage = newPage;
+        this.renderTable();
+        this.setupPagination();
+      } else {
+        this.showError(
+          `Page ${newPage} does not exist. Please enter a page number between 1 and ${pageCount}`
+        );
+        e.target.value = this.currentPage;
+        setTimeout(() => (this.errorElement.style.display = "none"), 3000);
+      }
+    });
   }
 
   showLoading() {
