@@ -104,7 +104,20 @@ class KickstarterTable {
     this.paginationContainer.innerHTML = `
         <div class="table-footer">
             <div class="rows-per-page">
-                <span>Rows per page: ${this.rowsPerPage}</span>
+                <span>Rows per page:</span>
+                <select class="rows-select">
+                    ${[5, 10, 15, 20]
+                      .map(
+                        (value) => `
+                            <option value="${value}" ${
+                          this.rowsPerPage === value ? "selected" : ""
+                        }>
+                                ${value}
+                            </option>
+                        `
+                      )
+                      .join("")}
+                </select>
             </div>
             <div class="pagination-controls">
                 <button class="page-nav" ${
@@ -127,7 +140,7 @@ class KickstarterTable {
         </div>
     `;
 
-    // Add event listeners
+    // Add existing event listeners
     const prevButton = this.paginationContainer.querySelector(
       ".page-nav:first-child"
     );
@@ -135,6 +148,15 @@ class KickstarterTable {
       ".page-nav:last-child"
     );
     const pageInput = this.paginationContainer.querySelector(".page-input");
+    const rowsSelect = this.paginationContainer.querySelector(".rows-select");
+
+    // Add rows per page change handler
+    rowsSelect.addEventListener("change", (e) => {
+      this.rowsPerPage = parseInt(e.target.value);
+      this.currentPage = 1; // Reset to first page when changing rows per page
+      this.renderTable();
+      this.setupPagination();
+    });
 
     prevButton.addEventListener("click", () => {
       if (this.currentPage > 1) {

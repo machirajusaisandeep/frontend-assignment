@@ -28,7 +28,6 @@ h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin-bottom: 1.5rem;
-  padding: 0 1rem;
 }
 
 .table-container {
@@ -253,5 +252,52 @@ tr:hover {
 
   .table-footer {
     display: none;
+  }
+}
+
+.rows-select {
+  padding: 0.25rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  color: #666;
+  font-size: 0.875rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.rows-select:focus {
+  border-color: #007bff;
+}
+
+.rows-select:hover {
+  border-color: #999;
+}
+
+/* Update existing rows-per-page class */
+.rows-per-page {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Add styles for the select arrow */
+.rows-select {
+  appearance: none;
+  padding-right: 1.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23666' d='M0 2l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+}
+
+/* Adjust mobile styles */
+@media (max-width: 768px) {
+  .rows-per-page {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .rows-select {
+    min-width: 80px;
   }
 }
