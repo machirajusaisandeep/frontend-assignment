@@ -22,9 +22,15 @@ class KickstarterTable {
   async fetchProjects() {
     try {
       this.showLoading();
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
       const response = await fetch(
-        "https://raw.githubusercontent.com/saaslabsco/frontend-assignment/refs/heads/master/frontend-assignment.json"
+        "https://raw.githubusercontent.com/saaslabsco/frontend-assignment/refs/heads/master/frontend-assignment.json",
+        { signal: controller.signal }
       );
+
+      clearTimeout(timeoutId);
 
       console.log("Response status:", response.status);
 
@@ -50,6 +56,9 @@ class KickstarterTable {
 
       this.hideLoading();
     } catch (error) {
+      if (error.name === "AbortError") {
+        throw new Error("Request timed out. Please try again.");
+      }
       this.hideLoading();
       console.error("Fetch error:", error);
       throw error;
@@ -157,10 +166,24 @@ class KickstarterTable {
         setTimeout(() => (this.errorElement.style.display = "none"), 3000);
       }
     });
+
+    pageInput.addEventListener("input", (e) => {
+      // Remove non-numeric characters
+      e.target.value = e.target.value.replace(/[^0-9]/g, "");
+    });
   }
 
   showLoading() {
     this.loadingElement.style.display = "block";
+    this.tableBody.innerHTML = `
+        <tr>
+            <td colspan="3">
+                <div class="table-body-empty">
+                    Loading data...
+                </div>
+            </td>
+        </tr>
+    `;
   }
 
   hideLoading() {

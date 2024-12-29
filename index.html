@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kickstarter Projects Dashboard" />
     <title>Kickstarter Projects</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -11,12 +12,12 @@
       <h1>Kickstarter Projects</h1>
       <div class="table-wrapper">
         <div class="table-container">
-          <table>
+          <table aria-label="Kickstarter Projects">
             <thead>
               <tr>
-                <th>S.No.</th>
-                <th>Percentage Funded</th>
-                <th>Amount Pledged</th>
+                <th scope="col">S.No.</th>
+                <th scope="col">Percentage Funded</th>
+                <th scope="col">Amount Pledged</th>
               </tr>
             </thead>
             <tbody id="tableBody">
@@ -24,12 +25,12 @@
             </tbody>
           </table>
         </div>
-        <div id="pagination">
+        <div id="pagination" aria-label="Table navigation">
           <!-- Pagination will be inserted here -->
         </div>
       </div>
-      <div id="loading" class="loading">Loading...</div>
-      <div id="error" class="error"></div>
+      <div id="loading" class="loading" aria-live="polite">Loading...</div>
+      <div id="error" class="error" role="alert"></div>
     </div>
     <script src="script.js"></script>
   </body>
