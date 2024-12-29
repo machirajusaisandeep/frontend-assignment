@@ -24,7 +24,7 @@ class KickstarterTable {
     try {
       this.showLoading();
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
 
       const response = await fetch(
         "https://raw.githubusercontent.com/saaslabsco/frontend-assignment/refs/heads/master/frontend-assignment.json",
@@ -42,7 +42,6 @@ class KickstarterTable {
       const data = await response.json();
       console.log("Raw data:", data);
 
-      // Transform the data to match our needs
       this.projects = data.map((project) => ({
         percentageFunded:
           project.percentage_funded || project["percentage.funded"] || 0,
@@ -84,13 +83,12 @@ class KickstarterTable {
       return;
     }
 
-    // Remove empty rows and just show actual data
     this.tableBody.innerHTML = currentProjects
       .map(
         (project, index) => `
                 <tr>
                     <td>${startIndex + index + 1}</td>
-                    <td>${Math.round(project.percentageFunded)}%</td>
+                    <td>${Math.round(project.percentageFunded)}</td>
                     <td>$${Math.round(
                       project.amountPledged
                     ).toLocaleString()}</td>
@@ -141,7 +139,6 @@ class KickstarterTable {
         </div>
     `;
 
-    // Add existing event listeners
     const prevButton = this.paginationContainer.querySelector(
       ".page-nav:first-child"
     );
@@ -151,11 +148,10 @@ class KickstarterTable {
     const pageInput = this.paginationContainer.querySelector(".page-input");
     const rowsSelect = this.paginationContainer.querySelector(".rows-select");
 
-    // Add rows per page change handler
     rowsSelect.addEventListener("change", (e) => {
       const newValue = parseInt(e.target.value);
       this.rowsPerPage = newValue;
-      this.currentPage = 1; // Reset to first page
+      this.currentPage = 1;
       this.renderTable();
       this.setupPagination();
       this.showToastr(`Rows Per Page updated to ${newValue}`);
@@ -193,7 +189,6 @@ class KickstarterTable {
     });
 
     pageInput.addEventListener("input", (e) => {
-      // Remove non-numeric characters
       e.target.value = e.target.value.replace(/[^0-9]/g, "");
     });
   }
@@ -221,12 +216,10 @@ class KickstarterTable {
   }
 
   showToastr(message) {
-    // Remove existing toastr if any
     if (this.toastr) {
       document.body.removeChild(this.toastr);
     }
 
-    // Create new toastr
     this.toastr = document.createElement("div");
     this.toastr.className = "toastr";
     this.toastr.innerHTML = `
@@ -234,17 +227,14 @@ class KickstarterTable {
       <button class="toastr-close" aria-label="Close notification">×</button>
     `;
 
-    // Add to body
     document.body.appendChild(this.toastr);
 
-    // Add close button handler
     const closeButton = this.toastr.querySelector(".toastr-close");
     closeButton.addEventListener("click", () => {
       document.body.removeChild(this.toastr);
       this.toastr = null;
     });
 
-    // Auto close after 3 seconds
     setTimeout(() => {
       if (this.toastr) {
         document.body.removeChild(this.toastr);
@@ -254,7 +244,6 @@ class KickstarterTable {
   }
 }
 
-// Initialize the table when the DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
   const table = new KickstarterTable();
   table.init();
