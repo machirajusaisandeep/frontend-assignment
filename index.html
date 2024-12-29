@@ -9,22 +9,24 @@
   <body>
     <div class="container">
       <h1>Kickstarter Projects</h1>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>S.No.</th>
-              <th>Percentage Funded</th>
-              <th>Amount Pledged</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-            <!-- Data will be inserted here -->
-          </tbody>
-        </table>
-      </div>
-      <div class="pagination" id="pagination">
-        <!-- Pagination buttons will be inserted here -->
+      <div class="table-wrapper">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>S.No.</th>
+                <th>Percentage Funded</th>
+                <th>Amount Pledged</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <!-- Data will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+        <div id="pagination">
+          <!-- Pagination will be inserted here -->
+        </div>
       </div>
       <div id="loading" class="loading">Loading...</div>
       <div id="error" class="error"></div>
