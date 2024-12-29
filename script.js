@@ -7,6 +7,7 @@ class KickstarterTable {
     this.paginationContainer = document.getElementById("pagination");
     this.loadingElement = document.getElementById("loading");
     this.errorElement = document.getElementById("error");
+    this.toastr = null;
   }
 
   async init() {
@@ -152,10 +153,12 @@ class KickstarterTable {
 
     // Add rows per page change handler
     rowsSelect.addEventListener("change", (e) => {
-      this.rowsPerPage = parseInt(e.target.value);
-      this.currentPage = 1; // Reset to first page when changing rows per page
+      const newValue = parseInt(e.target.value);
+      this.rowsPerPage = newValue;
+      this.currentPage = 1; // Reset to first page
       this.renderTable();
       this.setupPagination();
+      this.showToastr(`Rows Per Page updated to ${newValue}`);
     });
 
     prevButton.addEventListener("click", () => {
@@ -215,6 +218,39 @@ class KickstarterTable {
   showError(message) {
     this.errorElement.textContent = message;
     this.errorElement.style.display = "block";
+  }
+
+  showToastr(message) {
+    // Remove existing toastr if any
+    if (this.toastr) {
+      document.body.removeChild(this.toastr);
+    }
+
+    // Create new toastr
+    this.toastr = document.createElement("div");
+    this.toastr.className = "toastr";
+    this.toastr.innerHTML = `
+      ${message}
+      <button class="toastr-close" aria-label="Close notification">×</button>
+    `;
+
+    // Add to body
+    document.body.appendChild(this.toastr);
+
+    // Add close button handler
+    const closeButton = this.toastr.querySelector(".toastr-close");
+    closeButton.addEventListener("click", () => {
+      document.body.removeChild(this.toastr);
+      this.toastr = null;
+    });
+
+    // Auto close after 3 seconds
+    setTimeout(() => {
+      if (this.toastr) {
+        document.body.removeChild(this.toastr);
+        this.toastr = null;
+      }
+    }, 3000);
   }
 }
 
